@@ -1,13 +1,14 @@
-TARGET := iphone:clang:latest:7.0
+TARGET := iphone:clang:latest:12.0
 ARCHS = arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk
 
-LIBRARY_NAME = MostashUltra
+TWEAK_NAME = MostashUltra
 
-MostashUltra_FILES = $(wildcard *.xm) $(wildcard *.m) $(wildcard *.mm)
+MostashUltra_FILES = Tweak.xm
 MostashUltra_CFLAGS = -fobjc-arc
 
-MostashUltra_FRAMEWORKS = UIKit Foundation
+# ❌ مهم: لا تربط Substrate في CI
+# MostashUltra_LIBRARIES = substrate   ❌ احذفه
 
-include $(THEOS_MAKE_PATH)/library.mk
+include $(THEOS_MAKE_PATH)/tweak.mk
