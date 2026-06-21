@@ -1,44 +1,21 @@
-name: Build Theos Library
-
-on:
-  workflow_dispatch:
-  push:
-
-jobs:
-  build:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          brew update
-          brew install make perl git
-
-      - name: Install Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git $HOME/theos
-          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
-          echo "$HOME/theos/bin" >> $GITHUB_PATH
-
-      - name: Clean
-        run: make clean
-
-      - name: Build
-        run: make
-
-      - name: Debug - find dylib
-        run: |
-          echo "Searching for dylib..."
-          find . -name "*.dylib"
-
-      - name: Upload dylib artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: MostashUltra-dylib
-          path: |
-            .theos/obj/**/*.dylib
-            .theos/obj/*.dylib
-            **/*.dylib
+Theos isn’t using all available CPU cores on this computer. Consider upgrading GNU Make: https://theos.dev/docs/parallel-building
+==> Warning: Building for iOS 12.0, but the current toolchain can’t produce arm64e binaries for iOS earlier than 14.0. More information: https://theos.dev/docs/arm64e-deployment
+> Making all for tweak MostashUltra…
+==> Preprocessing Tweak.xm…
+==> Compiling Tweak.xm (arm64)…
+==> Linking tweak MostashUltra (arm64)…
+ld: warning: -multiply_defined is obsolete
+==> Generating debug symbols for MostashUltra…
+==> Preprocessing Tweak.xm…
+==> Compiling Tweak.xm (arm64e)…
+==> Linking tweak MostashUltra (arm64e)…
+ld: warning: -multiply_defined is obsolete
+==> Generating debug symbols for MostashUltra…
+==> Merging tweak MostashUltra…
+==> Signing MostashUltra…
+bash: ldid: command not found
+make[2]: *** [/Users/runner/work/MostashUltraApp/MostashUltraApp/.theos/obj/debug/MostashUltra.dylib] Error 127
+rm /Users/runner/work/MostashUltraApp/MostashUltraApp/.theos/obj/debug/MostashUltra.dylib.804c181c.unsigned
+make[1]: *** [internal-library-all_] Error 2
+make: *** [MostashUltra.all.tweak.variables] Error 2
+Error: Process completed with exit code 2.
