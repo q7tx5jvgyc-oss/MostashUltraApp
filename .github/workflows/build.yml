@@ -12,35 +12,43 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # 🔧 تثبيت dependencies مع حل مشكلة Homebrew taps
       - name: Install dependencies
         run: |
-          brew update
-          brew install make perl git
+          export HOMEBREW_NO_REQUIRE_TAP_TRUST=1
+          brew update || true
+          brew install make perl git || true
 
+      # 🔥 تثبيت Theos
       - name: Install Theos
         run: |
           git clone --recursive https://github.com/theos/theos.git $HOME/theos
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
           echo "$HOME/theos/bin" >> $GITHUB_PATH
 
-      - name: Install ldid (fixed)
+      # 🔥 تثبيت ldid الصحيح
+      - name: Install ldid
         run: |
           curl -L -o ldid https://github.com/ProcursusTeam/ldid/releases/download/2.1.5/ldid
           chmod +x ldid
           sudo mv ldid /usr/local/bin/ldid
 
-      - name: Clean project
+      # 🧹 تنظيف المشروع
+      - name: Clean
         run: make clean
 
-      - name: Build project
+      # ⚙️ بناء المشروع
+      - name: Build
         run: |
           export LD_SHARED_CACHE_ELIGIBLE=NO
           make
 
-      - name: Find dylib output
+      # 🔍 البحث عن الناتج
+      - name: Show output
         run: |
           find . -name "*.dylib"
 
+      # 📦 رفع الملف النهائي
       - name: Upload dylib artifact
         uses: actions/upload-artifact@v4
         with:
