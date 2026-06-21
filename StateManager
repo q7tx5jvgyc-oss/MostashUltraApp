@@ -1,6 +1,0 @@
-#import <Foundation/Foundation.h>
-
-@interface StateManager : NSObject
-+ (BOOL)isEnabled;
-+ (void)setEnabled:(BOOL)enabled;
-@end
