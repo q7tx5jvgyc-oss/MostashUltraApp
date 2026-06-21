@@ -23,21 +23,21 @@ jobs:
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
           echo "$HOME/theos/bin" >> $GITHUB_PATH
 
-      - name: Install ldid
+      - name: Install ldid (fixed)
         run: |
-          curl -L -o ldid https://github.com/ProcursusTeam/ldid/releases/latest/download/ldid_macos
+          curl -L -o ldid https://github.com/ProcursusTeam/ldid/releases/download/2.1.5/ldid
           chmod +x ldid
           sudo mv ldid /usr/local/bin/ldid
 
-      - name: Clean
+      - name: Clean project
         run: make clean
 
-      - name: Build
+      - name: Build project
         run: |
           export LD_SHARED_CACHE_ELIGIBLE=NO
           make
 
-      - name: Show output
+      - name: Find dylib output
         run: |
           find . -name "*.dylib"
 
