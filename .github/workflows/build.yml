@@ -1,4 +1,4 @@
-name: Build Theos Dylib
+name: Build Theos Library
 
 on:
   workflow_dispatch:
@@ -9,13 +9,13 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           brew update
-          brew install make ldid perl git
+          brew install make perl git
 
       - name: Install Theos
         run: |
@@ -23,13 +23,15 @@ jobs:
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
           echo "$HOME/theos/bin" >> $GITHUB_PATH
 
-      - name: Build dylib (NO deb)
-        run: |
-          make clean
-          make
+      - name: Clean
+        run: make clean
 
-      - name: Show build output
+      - name: Build
+        run: make
+
+      - name: Debug - find dylib
         run: |
+          echo "Searching for dylib..."
           find . -name "*.dylib"
 
       - name: Upload dylib artifact
@@ -37,5 +39,6 @@ jobs:
         with:
           name: MostashUltra-dylib
           path: |
-            .theos/**/*.dylib
             .theos/obj/**/*.dylib
+            .theos/obj/*.dylib
+            **/*.dylib
