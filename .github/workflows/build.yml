@@ -1,19 +1,43 @@
-- name: Build Tweak
-  run: |
-    make clean
-    make package FINALPACKAGE=1
+name: Build Tweak
 
-- name: Find outputs (Debug)
-  run: |
-    echo "=== SEARCHING FOR OUTPUT FILES ==="
-    find . -name "*.deb"
-    find . -name "*.dylib"
+on:
+  workflow_dispatch:
+  push:
 
-- name: Upload Artifact
-  uses: actions/upload-artifact@v4
-  with:
-    name: MostashUltra
-    path: |
-      packages/*.deb
-      packages/**/*.deb
-      .theos/**/obj/**/*.dylib
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Install Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          echo "$HOME/theos/bin" >> $GITHUB_PATH
+
+      - name: Install Dependencies
+        run: |
+          brew update
+          brew install make
+          brew install ldid
+
+      - name: Build
+        run: |
+          make clean
+          make package FINALPACKAGE=1
+
+      - name: Debug Output
+        run: |
+          find . -name "*.deb"
+          find . -name "*.dylib"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MostashUltra
+          path: |
+            packages/**/*.deb
+            .theos/**/*.dylib
