@@ -1,0 +1,8 @@
+Package: com.mostash.ultra
+Name: MostashUltra
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Ultra VIP dylib tweak system
+Maintainer: Mostash
+Author: Mostash
+Section: Tweaks
